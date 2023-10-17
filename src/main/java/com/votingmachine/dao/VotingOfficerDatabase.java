@@ -1,4 +1,4 @@
-package com.votingmachine.dao.interfaces;
+package com.votingmachine.dao;
 
 public interface VotingOfficerDatabase {
 

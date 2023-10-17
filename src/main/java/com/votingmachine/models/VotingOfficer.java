@@ -7,8 +7,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.votingmachine.validators.password.ValidPassword;
-import com.votingmachine.validators.username.ValidUsername;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,14 +17,10 @@ public class VotingOfficer {
 	private final UUID VOId;
 	
 	@NotBlank
-	@ValidUsername
 	@Indexed(unique = true)
-	@Size(min = 5, message = "Username must be at least 5 characters long")
 	private final String username;
 	
 	@NotBlank
-	@ValidPassword
-	@Size(min = 8, message = "Password must be at least 5 characters long")
 	private String hashedPassword;
 	
 	@NotBlank
@@ -36,6 +30,7 @@ public class VotingOfficer {
 
 	public VotingOfficer(@JsonProperty("VOId") UUID VOId, @JsonProperty("username") String username,
 			@JsonProperty("password") String hashedPassword, @JsonProperty("name") String nameOfVotingOfficer) {
+		System.out.println("Try for creating person");
 		this.VOId = VOId;
 		this.username = username;
 		this.hashedPassword = hashedPassword;

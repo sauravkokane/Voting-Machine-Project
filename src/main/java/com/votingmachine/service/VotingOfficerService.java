@@ -1,44 +1,45 @@
 package com.votingmachine.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.votingmachine.dao.interfaces.mongodb.VotingOfficerMongoDatabaseService;
+import com.votingmachine.dao.mongodb.VotingOfficerRepository;
 import com.votingmachine.models.VotingOfficer;
 import com.votingmachine.security.PasswordTranslator;
 
 @Service
 public class VotingOfficerService {
 
-	private VotingOfficerMongoDatabaseService databaseService;
+	private VotingOfficerRepository databaseService;
 	private PasswordTranslator translator;
 
-	public VotingOfficerService(@Qualifier("Mongo") VotingOfficerMongoDatabaseService databaseService,
+	public VotingOfficerService(@Qualifier("Mongo") VotingOfficerRepository databaseService,
 			PasswordTranslator translator) {
 		this.databaseService = databaseService;
 		this.translator = translator;
 	}
+	
 
-	public int insertVotingOfficer(UUID id, String username, String rawPassword, String nameOfOfficer) {
-		VotingOfficer officer = databaseService.findOneByUsername(username);
-		if(officer!=null)
-			return -1;
-		else {
-			officer = databaseService.findOneByVOId(id);
-			if(officer!=null)
-				return 0;
+	public ResponseEntity<?> insertVotingOfficer(UUID id, String username, String rawPassword, String nameOfOfficer) {
+//		if(username)
+		
+		if(databaseService.existsByUsernameOrId(username, id)) {
+			return ResponseEntity.badRequest().body("Already used username or user id, please choose another one");
 		}
-		String hashedPassword = translator.encryptPassword(rawPassword);
-		System.out.println("Hashed password: " + hashedPassword);
-		VotingOfficer officerToInsert = new VotingOfficer(id, username, hashedPassword, nameOfOfficer);
-		databaseService.save(officerToInsert);
-		return 1;
+		
+		
+		
+//		databaseService.save(officerToInsert);
+		return null;
 	}
 	
 
-	public int insertVotingOfficer(VotingOfficer officer) {
+	public ResponseEntity<?> insertVotingOfficer(VotingOfficer officer) {
 		UUID id = UUID.randomUUID();
 		return insertVotingOfficer(id, officer.getUsername(), officer.getHashedPassword(),
 				officer.getNameOfVotingOfficer());
