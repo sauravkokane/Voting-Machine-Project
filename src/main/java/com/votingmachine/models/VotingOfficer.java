@@ -9,12 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Document(collection = "Voting Officers")
 public class VotingOfficer {
 	@Id
 	private final UUID VOId;
+	
+	
+	@NotBlank
+	private String email;
 	
 	@NotBlank
 	@Indexed(unique = true)
@@ -28,10 +31,12 @@ public class VotingOfficer {
 	
 	private String regionOfPosting;
 
-	public VotingOfficer(@JsonProperty("VOId") UUID VOId, @JsonProperty("username") String username,
+	public VotingOfficer(@JsonProperty("id") UUID VOId, @JsonProperty("email") String email, @JsonProperty("username") String username,
 			@JsonProperty("password") String hashedPassword, @JsonProperty("name") String nameOfVotingOfficer) {
-		System.out.println("Try for creating person");
+//		System.out.println("Try for creating person: \n" + "Voting Officer Details:\n\tID: " + VOId + ",\n\tusername: " + username + ",\n\tName of Officer: "
+//				+ nameOfVotingOfficer);
 		this.VOId = VOId;
+		this.email = email;
 		this.username = username;
 		this.hashedPassword = hashedPassword;
 		this.nameOfVotingOfficer = nameOfVotingOfficer;
@@ -44,6 +49,7 @@ public class VotingOfficer {
 	public String getUsername() {
 		return username;
 	}
+	
 
 	public String getNameOfVotingOfficer() {
 		return nameOfVotingOfficer;
@@ -51,6 +57,14 @@ public class VotingOfficer {
 
 	public String getHashedPassword() {
 		return hashedPassword;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public void setHashedPassword(String hashedPassword) {
@@ -67,7 +81,9 @@ public class VotingOfficer {
 
 	@Override
 	public String toString() {
-		return "Voting Officer Details:\n\tID: " + VOId + ",\n\tusername: " + username + ",\n\tName of Officer: "
-				+ nameOfVotingOfficer;
+		return "VotingOfficer [VOId=" + VOId + ", username=" + username + ", nameOfVotingOfficer=" + nameOfVotingOfficer
+				+ "]";
 	}
+
+	
 }
